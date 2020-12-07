@@ -750,7 +750,9 @@ def _minimize_neldermead(func, x0, args=(), callback=None,
         sim = np.take(sim, ind, 0)
         fsim = np.take(fsim, ind, 0)
         if callback is not None:
-            callback(sim[0])
+            print("NM callback")
+            if callback(sim[0]) is True:
+                break
         iterations += 1
         if retall:
             allvecs.append(sim[0])
@@ -1880,8 +1882,11 @@ def fminbound(func, x1, x2, args=(), xtol=1e-5, maxfun=500,
         return res['x']
 
 
+#def _minimize_scalar_bounded(func, bounds, args=(),
+#                             xatol=1e-5, maxiter=500, disp=0,
+#                             **unknown_options):
 def _minimize_scalar_bounded(func, bounds, args=(),
-                             xatol=1e-5, maxiter=500, disp=0,
+                             xatol=1e-3, maxiter=20, disp=0,
                              **unknown_options):
     """
     Options
@@ -2939,7 +2944,9 @@ def _minimize_powell(func, x0, args=(), callback=None, bounds=None,
                 bigind = i
         iter += 1
         if callback is not None:
-            callback(x)
+            print('entered powell callback')
+            if callback(x) is True:
+                break
         if retall:
             allvecs.append(x)
         bnd = ftol * (np.abs(fx) + np.abs(fval)) + 1e-20
